@@ -17,7 +17,7 @@ input CursoInput {
 }
 
   type Query {
-    obtenerCursos(input: CursoInput!) :[Curso]
+    obtenerCursos(input: CursoInput!) : [Curso]
     obtenerTecnologia: [Tecnologia]
   }
 `;

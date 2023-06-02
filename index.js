@@ -1,6 +1,5 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require('@apollo/server/standalone');
-// const { gql } = require("graphql-tag");
 const typeDefs = require('./db/schema')
 const resolvers = require('./db/resolvers')
 
@@ -13,6 +12,13 @@ async function startServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    context: () => {
+        const miContext = "hola";
+
+        return {
+          miContext
+        }
+    }
   });
 //arrancar el servidor
   const { url } = await startStandaloneServer(server, {
