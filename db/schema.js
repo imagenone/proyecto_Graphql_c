@@ -3,22 +3,28 @@ const { gql } = require("graphql-tag");
 
 // Schema
 const typeDefs = gql`
-  type Curso {
-    titulo: String
-  
-  }
-  type Tecnologia {
-    titulo: String
-    tecnologia: String
+
+  type Usuario {
+    id: ID
+    nombre: String
+    apellido: String
+    email: String
+    creado: String
   }
 
-input CursoInput {
-    tecnologia: String
-}
+  input UsuarioInput {
+    nombre: String!
+    apellido: String!
+    email: String!
+    password: String!
+  }
 
   type Query {
-    obtenerCursos(input: CursoInput!) : [Curso]
-    obtenerTecnologia: [Tecnologia]
+    obtenerCurso : String
+  }
+
+  type Mutation {
+    nuevoUsuario (input: UsuarioInput): Usuario
   }
 `;
 
