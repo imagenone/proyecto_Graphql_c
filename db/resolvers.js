@@ -134,18 +134,20 @@ const resolvers = {
     nuevoCliente: async (_, { input }, ctx) => {
       const token = ctx;
       //
-      console.log("ctx Nuevocliente:",token)
-      //verificar si el cliente ya esta registrado
-      console.log("input:",input);
+      console.log("token!!!:",token)
+     
+   
       const { email } = input;
+       //verificar si el cliente ya esta registrado
       const cliente = await Cliente.findOne({ email });
-      console.log("cliente:",cliente);
+  
       if (cliente) {
         throw new Error("cliente ya esta registrado");
       }
       const nuevoCliente = new Cliente(input);  
       //asignar el vendedor
-       nuevoCliente.vendedor = "647fd084824bf21c39398a5d"
+      const res = nuevoCliente.vendedor = ctx.usuario.id ;        
+     console.log("res", res )
       //guardar en la DB
       try {
         const resultado = await nuevoCliente.save();

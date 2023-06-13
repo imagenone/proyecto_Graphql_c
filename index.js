@@ -13,20 +13,48 @@ const conectarDB = require("./config/db.js"); // conectar a la DB
 //llamar funcion de la base de datos
 conectarDB();
 
-//servidor
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: ({ctx}) => {
-    console.log("ctx: ", ctx.headers['authorization']||'')
 
-  }
-})
+
+
+
+
+
+
+
+
+
+
+//servidor
+const server = new ApolloServer({  resolvers,  typeDefs,})
 
 //arrancar el servidor puerto 4000
 async function startServer() {
-  const { url } = await startStandaloneServer(server)
-  console.log(`🚀 Server ready at ${url}`)
+  const { url } = await startStandaloneServer(server, {
+    context: async ({ req, res }) => {
+// console.log("ctx: " + req.headers.authorization || '')
+const token = req.headers.authorization || '' // si no existe le pasa un string vacio ''
+if (token) {
+  try {
+    const usuario =  jwt.verify(token, process.env.SECRETA);
+  //  console.log("usuario: " , usuario)
+  return{ 
+    usuario
+  }
+
+  } catch (error) {
+    console.log(error)
+    console.log("Hubo un error")
+  }
+  
+}
+
+    } ,
+    listen: { port: 4000 },
+    
+  });
+ 
+  console.log(`🚀  Server ready at ${url}`);
+
 }
 
 startServer().catch((error) => {
