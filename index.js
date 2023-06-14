@@ -8,91 +8,38 @@ require("dotenv").config({ path: "variables.env" });
 
 const conectarDB = require("./config/db.js"); // conectar a la DB
 
-
-
 //llamar funcion de la base de datos
 conectarDB();
 
-
-
-
-
-
-
-
-
-
-
-
 //servidor
-const server = new ApolloServer({  resolvers,  typeDefs,})
+const server = new ApolloServer({ resolvers, typeDefs });
 
 //arrancar el servidor puerto 4000
 async function startServer() {
   const { url } = await startStandaloneServer(server, {
     context: async ({ req, res }) => {
-// console.log("ctx: " + req.headers.authorization || '')
-const token = req.headers.authorization || '' // si no existe le pasa un string vacio ''
-if (token) {
-  try {
-    const usuario =  jwt.verify(token, process.env.SECRETA);
-  //  console.log("usuario: " , usuario)
-  return{ 
-    usuario
-  }
+      const token = req.headers.authorization || ""; // si no existe le pasa un string vacio ''
+      if (token) {
+        try {
+          const usuario = jwt.verify(token, process.env.SECRETA);
 
-  } catch (error) {
-    console.log(error)
-    console.log("Hubo un error")
-  }
-  
-}
-
-    } ,
-    listen: { port: 4000 },
-    
+          return {
+            usuario,
+          };
+        } catch (error) {
+          console.log(error);
+          console.log("Hubo un error");
+        }
+      }
+    },
+    listen: { port: 4000 }, //escuchando por el port 4000
   });
- 
-  console.log(`🚀  Server ready at ${url}`);
 
+  console.log(`🚀  Server ready at ${url}`);
 }
 
 startServer().catch((error) => {
-  //mensaje si hay error al conectar 
-  console.error("Error starting server:", error)
-})
+ 
+  console.error("Error starting server:", error); //mensaje si hay error al conectar
+});
 
-
-
-
-
-
-
-
-
-
-// async function startServer() {
-//   servidor
-//   const server = new ApolloServer({
-//     typeDefs,
-//     resolvers,
-//     context: ({ req }) => {
-//       
-//       const token = req.headers.authorization || '';
-//    console.log("req: ", token)
-//     return { token}
-    
-//     },
-//   });
-//   arrancar el servidor
-
-//   const { url } = await startStandaloneServer(server, {
-//     listen: { port: 4000 },
-//   });
-
-//   console.log(`Servidor listo en la URL: ${url}`);
-// }
-
-// startServer().catch((error) => {
-//   console.error("Error starting the server:", error);
-// });

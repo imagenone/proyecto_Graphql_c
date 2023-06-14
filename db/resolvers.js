@@ -10,7 +10,7 @@ const crearToken = (usuario, secreta, expiresIn) => {
   const { id, email, nombre, apellido } = usuario;
   return jwt.sign({ id, email, nombre, apellido }, secreta, { expiresIn }); // la misma que firma el token
 };
-// Resolvers
+//** Resolvers */ 
 const resolvers = {
   Query: {
     obtenerUsuario: async (_, { token }) => {
@@ -22,6 +22,7 @@ const resolvers = {
         throw new Error("Token inválido o expirado");
       }
     },
+    //obtener los Products
     obtenerProductos: async () => {
       try {
         const producto = await Producto.find({});
@@ -30,6 +31,7 @@ const resolvers = {
         console.log(error);
       }
     },
+    //obteber Producto
     obtenerProducto: async (_, { id }) => {
       //revisar si el producto existe
       const producto = await Producto.findById(id);
@@ -39,6 +41,7 @@ const resolvers = {
       }
       return producto;
     },
+    //obtener Clientes
     obtenerClientes : async () => {
       try {
         const clientes = await Cliente.find({});
@@ -48,7 +51,34 @@ const resolvers = {
         
       }
     },
+    obtenerClientesVendedor : async (_, {}, ctx) => {
+      try {
+        const clientes = await Cliente.find({vendedor: ctx.usuario.id.toString()});
+        return clientes;
+      } catch (error) {
+        console.log(error)
+        
+      }
+    },
+    obtenerCliente : async (_, {id}, ctx) => {
+      // revisar si el cliente existe
+      const cliente = await Cliente.findById(id);
+      if (!cliente){
+        throw new Error('cliente not found');
+      }
+
+      // quien lo creo puede verlo
+      if (cliente.vendedor.toString() !== ctx.usuario.id){ // si es difente a ctx.usuario.id
+        throw new Error('dont have credentials');
+
+
+      }
+
+      return cliente;
+
+    }
   },
+  //**Mutation */
   Mutation: {
     // Nuevo Usuario
     nuevoUsuario: async (_, { input }) => {
@@ -58,7 +88,7 @@ const resolvers = {
       if (existeUsuario) {
         throw Error("Usuario ya existe");
       }
-      //hasheaer su password
+      //hashear su password
       const salt = await bcryptjs.genSalt(10);
       input.password = await bcryptjs.hash(password, salt);
       // input.password = await bcryptjs.hash(password, salt);
@@ -155,8 +185,8 @@ const resolvers = {
       }
       const nuevoCliente = new Cliente(input);  
       //asignar el vendedor
-      const res = nuevoCliente.vendedor = ctx.usuario.id ;        
-     console.log("res", res )
+       nuevoCliente.vendedor = ctx.usuario.id ;        
+  
       //guardar en la DB
       try {
         const resultado = await nuevoCliente.save();
