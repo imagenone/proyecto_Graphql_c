@@ -195,6 +195,59 @@ const resolvers = {
         console.log(error);
       }
     },
+    actualizarCliente : async (_,{id, input}, ctx) =>  {
+      //verificar si existe
+      let cliente = await Cliente.findById(id);
+
+      if (!cliente) {
+        throw new Error("cliente no existe");
+      }
+      // verificar si el vendedor es quine edita
+      if (cliente.vendedor.toString() !== ctx.usuario.id){ // si es difente a ctx.usuario.id
+        throw new Error('dont have credentials');
+      }
+
+
+      // guardar el cliente
+
+      cliente = await Cliente.findOneAndUpdate({_id: id}, input, {new: true})
+      return cliente;
+    },
+    eliminarCliente: async (_,{id}, ctx) => {
+        //verificar si existe
+        let cliente = await Cliente.findById(id);
+
+        if (!cliente) {
+          throw new Error("cliente no existe");
+        }
+        // verificar si el vendedor es quine edita
+        if (cliente.vendedor.toString() !== ctx.usuario.id){ // si es difente a ctx.usuario.id
+          throw new Error('dont have credentials');
+        }
+
+        //elimnin el cliente
+        await Cliente.findOneAndDelete({_id: id});
+        return "cliente Eliminado";
+
+    },
+    nuevoPedido : async (_,{input}, ctx) => {
+      const { cliente } = input
+      // verfificar si el cliente existe
+      let clienteExiste = await Cliente.findById(cliente);
+      // verificar si el cliente es del vendedor
+
+      if(!clienteExiste) {
+        throw new Error('Ese cliente no existe');
+    }
+
+
+      // Revisar si el stock este disponible
+
+      //asignar el vendedor
+
+      // guardarlo en la base de datos
+
+    }
   },
 };
 
