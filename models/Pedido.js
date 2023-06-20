@@ -12,12 +12,12 @@ const ProductoSchema = mongoose.Schema({
    },
    cliente :{
     type: mongoose.Schema.Types.ObjectId,
-    require: true,
-    ref: 'cliente',
+    required: true,
+    ref: 'Cliente',
    },
-   Vendedor :{
+   vendedor :{
     type: mongoose.Schema.Types.ObjectId,
-    require: true,
+    required: true,
     ref: 'Usuario',
    },
    estado: {

@@ -47,6 +47,10 @@ estado: EstadoPedido
     id: ID
     cantidad: Int
   }
+  type TopCliente {
+        total: Float
+        cliente: [Cliente]
+    }
 
   input UsuarioInput {
     nombre: String!
@@ -79,8 +83,8 @@ estado: EstadoPedido
 
   input PedidoInput {
     pedido: [PedidoProductoInput]
-    total: Float!
-    cliente: ID!
+    total: Float
+    cliente: ID
     estado: EstadoPedido
   }
   enum EstadoPedido{
@@ -100,6 +104,16 @@ estado: EstadoPedido
     obtenerClientes : [Cliente]
     obtenerClientesVendedor: [ Cliente]
     obtenerCliente(id: ID!) : Cliente
+
+     # Pedidos
+     obtenerPedidos: [Pedido]
+     obtenerPedidosVendedor: [Pedido]
+     obtenerPedido(id: ID!) : Pedido
+     obtenerPedidosEstado(estado: String!): [Pedido]
+
+    # Busquedas Avanzadas
+    mejoresClientes: [TopCliente]
+
   }
 
   type Mutation {
@@ -119,6 +133,8 @@ estado: EstadoPedido
 
     #Pedidos 
     nuevoPedido(input:PedidoInput) : Pedido
+    actualizarPedido(id: ID!, input: PedidoInput ) : Pedido
+    eliminarPedido(id: ID!) : String
   }
 
 `;
