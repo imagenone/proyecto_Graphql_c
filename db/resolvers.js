@@ -55,8 +55,7 @@ const resolvers = {
     },
     obtenerClientesVendedor : async (_, {}, ctx) => {
       try {
-        const clientes = await Cliente.find({vendedor: ctx.usuario.id.toString()});
-        console.log("clientes", clientes);
+        const clientes = await Cliente.find({ vendedor: ctx.usuario.id.toString() });
         return clientes;
       } catch (error) {
         console.log(error)
@@ -138,13 +137,42 @@ const resolvers = {
             $limit: 10
         }, 
         {
-            $sort : { total : -1 }
+            $sort : { total : -1 } //cambia el total a mayor primero
         }
     ]);
 
     return clientes;
 }, 
+mejoresVendedores: async () => {
+  const vendedores = await Pedido.aggregate([
+      { $match : { estado : "COMPLETADO"} },
+      { $group : {
+          _id : "$vendedor", 
+          total: {$sum: '$total'} // suma todos registro de un vendedor en especifico
+      }},
+      {
+          $lookup: {
+              from: 'usuarios', 
+              localField: '_id',
+              foreignField: '_id',
+              as: 'vendedor'
+          }
+      }, 
+      {
+          $limit: 3
+      }, 
+      {
+          $sort: { total : -1 }
+      }
+  ]);
 
+  return vendedores;
+},
+buscarProducto: async(_, { texto }) => {
+  const productos = await Producto.find({ $text: { $search: texto  } }).limit(10) // traer minimo 10 vistas
+
+  return productos;
+}
   },
   //**Mutation */
   Mutation: {

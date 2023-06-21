@@ -52,6 +52,11 @@ estado: EstadoPedido
         cliente: [Cliente]
     }
 
+    type TopVendedor {
+        total: Float
+        vendedor: [Usuario]
+    }
+
   input UsuarioInput {
     nombre: String!
     apellido: String!
@@ -95,25 +100,26 @@ estado: EstadoPedido
 
   type Query {
     #usuarios
-    obtenerUsuario(token: String!) : Usuario
+    obtenerUsuario(token: String!): Usuario
     # Producto
     obtenerProductos: [Producto]
-    obtenerProducto(id: ID!) : Producto
+    obtenerProducto(id: ID!): Producto
 
     #Clientes
-    obtenerClientes : [Cliente]
-    obtenerClientesVendedor: [ Cliente]
-    obtenerCliente(id: ID!) : Cliente
+    obtenerClientes: [Cliente]
+    obtenerClientesVendedor: [Cliente]
+    obtenerCliente(id: ID!): Cliente
 
      # Pedidos
      obtenerPedidos: [Pedido]
      obtenerPedidosVendedor: [Pedido]
-     obtenerPedido(id: ID!) : Pedido
+     obtenerPedido(id: ID!): Pedido
      obtenerPedidosEstado(estado: String!): [Pedido]
 
-    # Busquedas Avanzadas
+    # Busqueda Avanzada
     mejoresClientes: [TopCliente]
-
+    mejoresVendedores: [TopVendedor]
+    buscarProducto(texto: String!) : [Producto]
   }
 
   type Mutation {
