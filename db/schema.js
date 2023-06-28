@@ -100,7 +100,7 @@ estado: EstadoPedido
 
   type Query {
     #usuarios
-    obtenerUsuario(token: String!): Usuario
+    obtenerUsuario: Usuario
     # Producto
     obtenerProductos: [Producto]
     obtenerProducto(id: ID!): Producto

@@ -14,6 +14,7 @@
     "@apollo/usage-reporting-protobuf": "^4.1.0",
     "@apollo/utils.fetcher": "^3.0.0",
     "@graphql-tools/schema": "^10.0.0",
+    "apollo-link-context": "^1.0.20",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",

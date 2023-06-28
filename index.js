@@ -18,11 +18,12 @@ const server = new ApolloServer({ resolvers, typeDefs });
 async function startServer() {
   const { url } = await startStandaloneServer(server, {
     context: async ({ req, res }) => {
+      console.log("req.headers:", req.headers)
       const token = req.headers.authorization || ""; // si no existe le pasa un string vacio ''
       if (token) {
         try {
           const usuario = jwt.verify(token, process.env.SECRETA);
-
+          console.log("usuario: ", usuario)
           return {
             usuario,
           };

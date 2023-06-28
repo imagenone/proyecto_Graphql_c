@@ -15,14 +15,15 @@ const crearToken = (usuario, secreta, expiresIn) => {
 //** Resolvers */ 
 const resolvers = {
   Query: {
-    obtenerUsuario: async (_, { token }) => {
-      try {
-        const usuarioId = await jwt.verify(token, process.env.SECRETA); //la misma que verifique el token
-        return usuarioId;
-      } catch (error) {
-        console.log("token invalido",error);
-        throw new Error("Token inválido o expirado");
-      }
+    obtenerUsuario: async (_, {}, ctx) => {
+      return ctx.usuario
+      // try {
+      //   const usuarioId = await jwt.verify(token, process.env.SECRETA); //la misma que verifique el token
+      //   return usuarioId;
+      // } catch (error) {
+      //   console.log("token invalido",error);
+      //   throw new Error("Token inválido o expirado");
+      // }
     },
     //obtener los Products
     obtenerProductos: async () => {
